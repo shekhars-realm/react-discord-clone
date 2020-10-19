@@ -4,6 +4,7 @@ import Sidebar from './Sidebar'
 import Chat from './Chat'
 import { useSelector } from 'react-redux';
 import { selectUser } from './features/userSlice';
+import Login from './Login';
 
 function App() {
   const user = useSelector(selectUser)
@@ -16,7 +17,7 @@ function App() {
         <Sidebar/>
         <Chat/>
       </>
-       ) : <h2>Log in please</h2>
+       ) : <Login />
      }
     </div>
   );
