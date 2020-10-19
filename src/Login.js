@@ -22,10 +22,10 @@ function Login() {
                     displayName: authUser.displayName
                 }))
             } else {
-                //logout
+                 dispatch(logout())
             }
         })
-    }, [])
+    }, [dispatch])
 
     const signIn = () => {
         auth.signInWithPopup(provider).catch((error) => {
