@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Sidebar.css'
 import ExpandIcon from '@material-ui/icons/ExpandMore'
 import AddIcon from '@material-ui/icons/Add'
@@ -12,10 +12,31 @@ import InfoOutlinedIcon from "@material-ui/icons/InfoOutlined";
 import Avatar from "@material-ui/core/Avatar"
 import { useSelector } from 'react-redux'
 import { selectUser } from './features/userSlice'
-import { auth } from './firebase'
+import db, { auth } from './firebase'
+import { useState } from 'react'
+import { selectChannelName } from './features/appSlice'
 
 function Sidebar() {
   const user = useSelector(selectUser)
+  const [channels, setChannels] = useState([])
+
+  const handleAddChannel = () => {
+    const channelName = prompt("Enter a new channel . name.")
+    if(channelName) {
+      db.collection("channels").add({
+        channelName: channelName
+      })
+    }
+
+  }
+
+  useEffect(() => {
+    db.collection("channels").onSnapshot((snapshot) =>  setChannels(snapshot.docs.map(doc => ({
+      id:  doc.id,
+      channel:  doc.data(),
+    }))))
+  }, [])
+
     return (
       <div class="sidebar">
         <div class="sidebar__top">
@@ -28,13 +49,14 @@ function Sidebar() {
               <ExpandIcon />
               <h4>Text channels</h4>
             </div>
-            <AddIcon className="sidebar__addChannel" />
+            <AddIcon onClick={() => handleAddChannel()} className="sidebar__addChannel" />
           </div>
           <div class="sidebar__channelList">
-          <SidebarChannel />
-          <SidebarChannel />
-          <SidebarChannel />
-          <SidebarChannel />
+          {
+            channels.map(channel =>{
+              return <SidebarChannel key={channel.id} id={channel.id} channelName={channel.channelName} />
+            })
+          }
         </div>
         </div>
 
