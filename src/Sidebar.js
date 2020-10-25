@@ -25,6 +25,8 @@ function Sidebar() {
     if(channelName) {
       db.collection("channels").add({
         channelName: channelName
+      }).then(res => {
+        console.log(res)
       })
     }
 
@@ -54,7 +56,7 @@ function Sidebar() {
           <div class="sidebar__channelList">
           {
             channels.map(channel =>{
-              return <SidebarChannel key={channel.id} id={channel.id} channelName={channel.channelName} />
+              return <SidebarChannel key={channel.channel.id} id={channel.id} channelName={channel.channel.channelName} />
             })
           }
         </div>
